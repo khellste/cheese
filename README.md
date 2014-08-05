@@ -16,10 +16,11 @@ Simply copy "cheese.js" to your plugins/ folder and then include it in your main
 Usage
 ------
 `ig.Entity` is extended with event handler functions. To respond to events, simply override the new functions:
-* `click`. Called when this entity is clicked on.
-* `doubleClick`. Called when this entity is double clicked on.
+* `click`. Called when this entity is clicked.
+* `doubleClick`. Called when this entity is double clicked.
 * `mouseEnter`. Called when the mouse enters this entity.
 * `mouseLeave`. Called when the mouse leaves this entity.
+
 All of these functions take a `MouseEvent` object as their parameter. This object has the form:
 ```javascript
 {
