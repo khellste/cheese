@@ -1,5 +1,5 @@
 ig.module(
-	'plugins.cheese'
+	'plugins.cheese.cheese'
 ).requires(
 	'impact.entity',
 	'impact.input',
