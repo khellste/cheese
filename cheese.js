@@ -12,7 +12,7 @@ var initClick = function () {
 	initClick = null;
 };
 
-var ClickEvent = ig.Class.extend({
+ig.ClickEvent = ig.Class.extend({
 	key: 0,
 	items: [],
 	pos: { x: 0, y: 0 },
@@ -120,7 +120,7 @@ ig.Game.inject({
 		this.parent.apply(this, arguments);
 
 		// Reuse the same event object
-		var evt = new ClickEvent({
+		var evt = new ig.ClickEvent({
 			pos: { x: ig.input.mouse.x, y: ig.input.mouse.y },
 			key: ig.KEY.MOUSE1,
 			items: []
