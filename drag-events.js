@@ -14,9 +14,10 @@ ch.DragEvent.State = { NONE: -1, START: 0, DRAGGING: 1, DONE: 2 };
 ch.DragEvent.prototype.state = ch.DragEvent.State.NONE;
 
 // Drag events
-ig.Entity.inject({ _drag_active: { } });
-ch.DragEventQueue = ch.ClickEventQueue.extend({
+ch.DragEventQueue = ch.MouseEventQueue.extend({
 	handler: { drag: function () { } },
+	data: { active: false },
+	
 	_prevMousePos: { x: 0, y: 0 },
 	_start: { x: 0, y: 0 },
 	_delta: { x: 0, y: 0 },
@@ -43,14 +44,14 @@ ch.DragEventQueue = ch.ClickEventQueue.extend({
 		this._prevMousePos.y = ig.input.mouse.y;
 	},
 
-	detect: function (ent, hov, oHov) {
-		if (hov && this._state === ch.DragEvent.State.START) {
-			ent._drag_active[this.vkey] = true;
+	detect: function (ent, data) {
+		if (data.hover && this._state === ch.DragEvent.State.START) {
+			data.active = true;
 		}
 		else if (this._state === ch.DragEvent.State.NONE) {
-			ent._drag_active[this.vkey] = false;
+			data.active = false;
 		}
-		return ent._drag_active[this.vkey];
+		return data.active;
 	},
 
 	detectCursor: function () {

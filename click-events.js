@@ -22,11 +22,19 @@ var getVkey = function (igKey) {
 };
 
 ch.MouseEventQueue = ch.EventQueue.extend({
-	key: 0, vkey: '',
+	key: 0,
+	vkey: '',
 
 	init: function (settings) {
+		var data = this.data;
+		this.data = {};
 		this.parent(settings);
 		this.vkey = getVkey(this.key);
+		ig.Entity.prototype._event_data[this.name][this.vkey] = data || {};
+	},
+
+	getData: function (ent) {
+		return this.parent(ent)[this.vkey];
 	},
 
 	setup: function () {
@@ -40,28 +48,28 @@ ch.MouseEventQueue = ch.EventQueue.extend({
 	getEvent: function () {
 		return new ch.ClickEvent({
 			key: this.key, name: this.vkey,
-			items: this.queue, type: this._name,
+			items: this.queue, type: this.name,
 			pos: { x: ig.input.mouse.x, y: ig.input.mouse.y }
 		});
 	}
 });
 
 // Click event
-ig.Entity.inject({ _click_down: false });
 ch.ClickEventQueue = ch.MouseEventQueue.extend({
 	handler: { click: function () { } },
+	data: { active: false },
 
-	detect: function (ent, hov, oHov) {
-		if (hov) {
-			if (this.check('released') && ent._click_down) {
+	detect: function (ent, data) {
+		if (data.hover) {
+			if (this.check('released') && ent.active) {
 				return true;
 			}
 			else if (this.check('pressed')) {
-				ent._click_down = true;
+				ent.active = true;
 			}
 		}
-		else if (oHov) {
-			ent._click_down = false;
+		else if (data.pHover) {
+			ent.active = false;
 		}
 		return false;
 	},
@@ -106,8 +114,8 @@ ch.DoubleClickEventQueue = ch.MouseEventQueue.extend({
 		}
 	},
 
-	detect: function (entity, hover) {
-		return hover && this._triggered;
+	detect: function (entity, data) {
+		return data.hover && this._triggered;
 	},
 
 	detectCursor: function () {
