@@ -10,20 +10,20 @@ window.ch = window.ch || {};
 // Hover events
 ch.MouseEnterEventQueue = ch.EventQueue.extend({
 	handler: { mouseEnter: function () { } },
-	detect: function (entity, hover, oldHover) {
-		return hover && !oldHover;
+	detect: function (entity, data) {
+		return data.hover && !data.pHover;
 	}
 });
 ch.MouseLeaveEventQueue = ch.EventQueue.extend({
 	handler: { mouseLeave: function () { } },
-	detect: function (entity, hover, oldHover) {
-		return !hover && oldHover;
+	detect: function (entity, data) {
+		return !data.hover && data.pHover;
 	}
 });
 ch.MouseOverEventQueue = ch.EventQueue.extend({
 	handler: { mouseOver: function () { } },
-	detect: function (entity, hover, oldhover) {
-		return hover;
+	detect: function (entity, data) {
+		return data.hover;
 	}
 });
 
