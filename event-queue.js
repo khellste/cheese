@@ -6,8 +6,6 @@ ig.module(
 ).defines(function () {
 window.ch = window.ch || {};
 
-// TODO allow normal registering of events
-
 var events = [];
 ig.Entity.inject({
 	_hover: false,
@@ -19,11 +17,11 @@ ig.Entity.inject({
 			((ig.input.mouse.x + ig.game.screen.x) <= this.pos.x + this.size.x) &&
 			(this.pos.y <= (ig.input.mouse.y + ig.game.screen.y)) &&
 			((ig.input.mouse.y + ig.game.screen.y) <= this.pos.y + this.size.y);
-		events.forEach(function (e) {
-			if (e.detect(this, this._hover, oldHover)) {
-				e.queue.push(this);
+		for (var i = 0; i < events.length; i++) {
+			if (events[i].detect(this, this._hover, oldHover)) {
+				events[i].queue.push(this);
 			}
-		}.bind(this));
+		}
 		this.parent();
 	}
 });
@@ -45,6 +43,7 @@ ch.EventQueue = ig.Class.extend({
 	},
 
 	dispatch: function () {
+		this.preDispatch();
 		var event = null;
 		if (ig.game.cursor && this.detectCursor() &&
 			ig.game.cursor[this._name](event = this.getEvent()) === true) {
@@ -63,6 +62,7 @@ ch.EventQueue = ig.Class.extend({
 
 	setup:        function () { },
 	update:       function () { },
+	preDispatch:  function () { },
 	getEvent:     function () { return new ch.Event(); },
 	detect:       function () { },
 	detectCursor: function () { }

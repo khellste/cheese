@@ -22,8 +22,7 @@ var getVkey = function (igKey) {
 };
 
 ch.MouseEventQueue = ch.EventQueue.extend({
-	handler: { mouse: function () { } },
-	key: 0, vkey: '', type: '',
+	key: 0, vkey: '',
 
 	init: function (settings) {
 		this.parent(settings);
@@ -35,21 +34,13 @@ ch.MouseEventQueue = ch.EventQueue.extend({
 	},
 
 	check: function (how) {
-		return ig.input[how || this.type](this.vkey);
-	},
-
-	detect: function (entity, hover) {
-		return hover && this.check();
-	},
-
-	detectCursor: function () {
-		return this.check();
+		return ig.input[how](this.vkey);
 	},
 
 	getEvent: function () {
 		return new ch.ClickEvent({
-			key: this.key, name: this.vkey, items: this.queue,
-			type: this.type || this._name,
+			key: this.key, name: this.vkey,
+			items: this.queue, type: this._name,
 			pos: { x: ig.input.mouse.x, y: ig.input.mouse.y }
 		});
 	}
@@ -58,28 +49,24 @@ ch.MouseEventQueue = ch.EventQueue.extend({
 // Click event
 ig.Entity.inject({ _click_down: false });
 ch.ClickEventQueue = ch.MouseEventQueue.extend({
-	type: 'click',
 	handler: { click: function () { } },
-	_targets: [],
 
-	detect: function (entity, hover) {
-		if (hover) {
-			if (this.check('pressed')) {
-				entity._click_down = true;
-				this._targets.push(entity);
-				return false;
+	detect: function (ent, hov, oHov) {
+		if (hov) {
+			if (this.check('released') && ent._click_down) {
+				return true;
 			}
-			else if (this.check('released')) {
-				if (entity._click_down) {
-					return true;
-				}
+			else if (this.check('pressed')) {
+				ent._click_down = true;
 			}
+		}
+		else if (oHov) {
+			ent._click_down = false;
 		}
 		return false;
 	},
 
 	detectCursor: function () {
-		// TODO Ensure that mouse has not moved significantly
 		return this.check('released');
 	}
 });
