@@ -1,11 +1,11 @@
 ig.module(
-	'plugins.cheese.drag-events'
+	'plugins.cheese.drag'
 ).requires(
-	'plugins.cheese.click-events'
+	'plugins.cheese.mouse-event-queue'
 ).defines(function () {
 window.ch = window.ch || {};
 
-ch.DragEvent = ch.ClickEvent.extend({
+ch.DragEvent = ch.MouseEvent.extend({
 	delta: { x: 0, y: 0 },
 	start: { x: 0, y: 0 },
 	state: null
@@ -17,7 +17,7 @@ ch.DragEvent.prototype.state = ch.DragEvent.State.NONE;
 ch.DragEventQueue = ch.MouseEventQueue.extend({
 	handler: { drag: function () { } },
 	data: { active: false },
-	
+
 	_prevMousePos: { x: 0, y: 0 },
 	_start: { x: 0, y: 0 },
 	_delta: { x: 0, y: 0 },

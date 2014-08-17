@@ -1,47 +1,16 @@
 ig.module(
 	'plugins.cheese.cheese'
 ).requires(
-	'impact.input',
-	'plugins.cheese.click-events',
-	'plugins.cheese.hover-events',
-	'plugins.cheese.drag-events'
+	'plugins.cheese.click',
+	'plugins.cheese.hover',
+	'plugins.cheese.drag'
 ).defines(function () {
 window.ch = window.ch || {};
 
-ch.Cursor = ig.Class.extend({
-	image: null,
-	offset: { x: 0, y: 0 },
-	replace: false,
-
-	init: function (settings) {
-		ig.merge(this, settings || {});
-	},
-
-	draw: function (x, y) {
-		if (this.replace) {
-			ig.system.context.canvas.style.cursor = 'none';
-		}
-		this.image && this.image.draw(x - this.offset.x, y - this.offset.y);
-	},
-
-	click: 			function () { },
-	doubleClick: 	function () { },
-	mouseEnter: 	function () { },
-	mouseLeave: 	function () { }
-});
-
-ig.Input.inject({
-	_customEvents: {},
-
-	bind: function (key, name) {
-		this.parent(key, name);
-		// TODO Allow familiar syntax
-	}
-});
-
 ig.Game.inject({
-	_initialized: false,
-	
+	_eventsInitialized: false,
+	_mouseInitialized: false,
+
 	cursor: null,
 
 	events: [
@@ -56,11 +25,17 @@ ig.Game.inject({
 
 	_doEventInit: function () {
 		this.events.forEach(function (e) { e.setup(); });
-		this._initialized = true;
+		this._eventsInitialized = true;
+	},
+
+	_doMouseInit: function () {
+		ig.input.initMouse();
+		this._mouseInitialized = true;
 	},
 
 	update: function () {
-		this._initialized || this._doEventInit();
+		this._mouseInitialized || this._doMouseInit();
+		this._eventsInitialized || this._doEventInit();
 		this.events.forEach(function (e) { e.update(); });
 		this.parent();
 		this.events.forEach(function (e) { e.dispatch(); });

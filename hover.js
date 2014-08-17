@@ -1,7 +1,7 @@
 ig.module(
-	'plugins.cheese.hover-events'
+	'plugins.cheese.hover'
 ).requires(
-	'plugins.cheese.event-queue'
+	'plugins.cheese.mouse-event-queue'
 ).defines(function () {
 window.ch = window.ch || {};
 
