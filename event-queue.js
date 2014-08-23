@@ -2,7 +2,8 @@ ig.module(
 	'plugins.cheese.event-queue'
 ).requires(
 	'impact.input',
-	'impact.entity'
+	'impact.entity',
+	'plugins.cheese.cursor'
 ).defines(function () {
 window.ch = window.ch || {};
 
