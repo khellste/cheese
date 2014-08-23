@@ -5,8 +5,24 @@ ig.module(
 ).defines(function () {
 window.ch = window.ch || {};
 
+ch._ClickEventBase = ch.MouseEventQueue.extend({
+	_prevMousePos: { x: 0, y: 0 },
+
+	_checkMouse: function () {
+		var d2 =
+			Math.pow(ig.input.mouse.x - this._prevMousePos.x, 2) +
+			Math.pow(ig.input.mouse.y - this._prevMousePos.y, 2);
+		return d2 < ig.system.scale;
+	},
+
+	update: function () {
+		this._prevMousePos.x = ig.input.mouse.x;
+		this._prevMousePos.y = ig.input.mouse.y;
+	}
+});
+
 // Click event
-ch.ClickEventQueue = ch.MouseEventQueue.extend({
+ch.ClickEventQueue = ch._ClickEventBase.extend({
 	handler: { click: function () { } },
 	data: { active: false },
 
@@ -26,25 +42,17 @@ ch.ClickEventQueue = ch.MouseEventQueue.extend({
 	},
 
 	detectCursor: function () {
-		return this.check('released');
+		return this.check('released') && this._checkMouse();
 	}
 });
 
 // Double click event
-ch.DoubleClickEventQueue = ch.MouseEventQueue.extend({
+ch.DoubleClickEventQueue = ch._ClickEventBase.extend({
 	handler: { doubleClick: function () { } },
 
-	_prevMousePos: { x: 0, y: 0 },
 	_timer: null,
 	_threshold: 0.4,
 	_triggered: false,
-
-	_checkMouse: function () {
-		var d2 =
-			Math.pow(ig.input.mouse.x - this._prevMousePos.x, 2) +
-			Math.pow(ig.input.mouse.y - this._prevMousePos.y, 2);
-		return d2 < ig.system.scale;
-	},
 
 	update: function () {
 		this.parent();
@@ -57,8 +65,6 @@ ch.DoubleClickEventQueue = ch.MouseEventQueue.extend({
 			else {
 				this._timer = new ig.Timer(this._threshold);
 			}
-			this._prevMousePos.x = ig.input.mouse.x;
-			this._prevMousePos.y = ig.input.mouse.y;
 		}
 		if (this._timer && this._timer.delta() > 0) {
 			this._timer = null;
