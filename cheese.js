@@ -3,7 +3,8 @@ ig.module(
 ).requires(
 	'plugins.cheese.click',
 	'plugins.cheese.hover',
-	'plugins.cheese.drag'
+	'plugins.cheese.drag',
+	'impact.game'
 ).defines(function () {
 window.ch = window.ch || {};
 
@@ -12,16 +13,7 @@ ig.Game.inject({
 	_mouseInitialized: false,
 
 	cursor: null,
-
-	events: [
-		new ch.ClickEventQueue({ key: ig.KEY.MOUSE1 }),
-		new ch.ClickEventQueue({ key: ig.KEY.MOUSE2 }),
-		new ch.DoubleClickEventQueue({ key: ig.KEY.MOUSE1 }),
-		new ch.DragEventQueue({ key: ig.KEY.MOUSE1 }),
-		new ch.DragEventQueue({ key: ig.KEY.MOUSE2 }),
-		new ch.MouseEnterEventQueue(),
-		new ch.MouseLeaveEventQueue()
-	],
+	events: [],
 
 	_doEventInit: function () {
 		this.events.forEach(function (e) { e.setup(); });
