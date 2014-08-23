@@ -16,6 +16,7 @@ ch._ClickEventBase = ch.MouseEventQueue.extend({
 	},
 
 	update: function () {
+		this.parent();
 		this._prevMousePos.x = ig.input.mouse.x;
 		this._prevMousePos.y = ig.input.mouse.y;
 	}
