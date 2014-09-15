@@ -39,7 +39,7 @@ ch.Cursor = ig.Class.extend({
 	},
 
 	draw: function (x, y) {
-		if (!this.currentAnim) {
+		if (this.currentAnim) {
 			var off = this.offset, rs = ig.game._rscreen;
 			this.currentAnim.draw(x - off.x - rs.x, y - off.y - rs.y);
 		}
