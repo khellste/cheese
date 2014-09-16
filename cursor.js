@@ -10,11 +10,15 @@ ch.Cursor = ig.Class.extend({
 	currentAnim: null,
 	offset: { x: 0, y: 0 },
 	replace: false,
+	_initReplace: false,
 
 	init: function (settings) {
 		ig.merge(this, settings || {});
+	},
 
-		var replace = this.replace || false;
+	_initCursorReplaceProperty: function () {
+		var initReplace = this.replace || false;
+		var replace = !initReplace;
 		Object.defineProperty(this, 'replace', {
 			enumerable: true,
 			get: function () { return replace; },
@@ -24,6 +28,7 @@ ch.Cursor = ig.Class.extend({
 				ig.system.context.canvas.style.cursor = cursor;
 			}
 		});
+		this.replace = initReplace;
 	},
 
 	addAnim: function (name, frameTime, sequence, stop) {
@@ -39,6 +44,10 @@ ch.Cursor = ig.Class.extend({
 	},
 
 	update: function () {
+		if (!this._initReplace) {
+			this._initReplace = true;
+			this._initCursorReplaceProperty();
+		}
 		if (this.currentAnim) {
 			this.currentAnim.update();
 		}
