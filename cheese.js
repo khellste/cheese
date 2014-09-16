@@ -29,6 +29,7 @@ ig.Game.inject({
 		this._mouseInitialized || this._doMouseInit();
 		this._eventsInitialized || this._doEventInit();
 		this.events.forEach(function (e) { e.update(); });
+		this.cursor && this.cursor.update();
 		this.parent();
 		this.events.forEach(function (e) { e.dispatch(); });
 	},

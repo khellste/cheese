@@ -38,6 +38,12 @@ ch.Cursor = ig.Class.extend({
 		return a;
 	},
 
+	update: function () {
+		if (this.currentAnim) {
+			this.currentAnim.update();
+		}
+	},
+
 	draw: function (x, y) {
 		if (this.currentAnim) {
 			var off = this.offset, rs = ig.game._rscreen;
