@@ -22,6 +22,32 @@ ch._ClickEventBase = ch.MouseEventQueue.extend({
 	}
 });
 
+// Mouse down
+ch.MouseDownEventQueue = ch.MouseEventQueue.extend({
+	handler: { mouseDown: function () { } },
+
+	detect: function (ent, data) {
+		return data.hover && this.check('pressed');
+	},
+
+	detectCursor: function () {
+		return this.check('pressed');
+	}
+});
+
+// Mouse up
+ch.MouseUpEventQueue = ch.MouseEventQueue.extend({
+	handler: { mouseUp: function () { } },
+
+	detect: function (ent, data) {
+		return data.hover && this.check('released');
+	},
+
+	detectCursor: function () {
+		return this.check('released');
+	}
+});
+
 // Click event
 ch.ClickEventQueue = ch._ClickEventBase.extend({
 	handler: { click: function () { } },

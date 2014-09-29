@@ -9,16 +9,28 @@ window.ch = window.ch || {};
 
 var events = [];
 ig.Entity.inject({
+	hitbox: null,
 	_hover: false,
 	_event_data: {},
+
+	init: function (x, y, settings) {
+		this.parent(x, y, settings);
+		if (!this.hitbox) {
+			this.hitbox = {
+				offset: { x: 0, y: 0 },
+				size: { x: this.size.x, y: this.size.y }
+			};
+		}
+	},
+
 	update: function () {
-		this.zIndex = -this.pos.y;
 		var oldHover = this._hover;
-		this._hover =
-			(this.pos.x <= (ig.input.mouse.x + ig.game.screen.x)) &&
-			((ig.input.mouse.x + ig.game.screen.x) <= this.pos.x + this.size.x) &&
-			(this.pos.y <= (ig.input.mouse.y + ig.game.screen.y)) &&
-			((ig.input.mouse.y + ig.game.screen.y) <= this.pos.y + this.size.y);
+		var x = this.pos.x + this.hitbox.offset.x,
+			y = this.pos.y + this.hitbox.offset.y,
+			mx = ig.input.mouse.x + ig.game.screen.x,
+			my = ig.input.mouse.y + ig.game.screen.y,
+			w = this.hitbox.size.x, h = this.hitbox.size.y;
+		this._hover = x <= mx && x + w >= mx && y <= my && y + h >= my;
 		for (var i = 0; i < events.length; i++) {
 			var data = events[i].getData(this);
 			data.hover = this._hover;
@@ -64,7 +76,8 @@ ch.EventQueue = ig.Class.extend({
 		}
 		if (this.queue.length > 0) {
 			event = event || this.getEvent();
-			for (var i = 0; i < this.queue.length; i++) {
+			this.queue.sort(ig.game.sortBy);
+			for (var i = this.queue.length-1; i >= 0; i--) {
 				if (this.queue[i][this.name](event) === true) {
 					break;
 				}

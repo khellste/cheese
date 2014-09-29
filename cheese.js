@@ -34,8 +34,12 @@ ig.Game.inject({
 		this.events.forEach(function (e) { e.dispatch(); });
 	},
 
-	draw: function () {
-		this.parent.apply(this, arguments);
+	// Kind of a hack... We want the cursor to ALWAYS be drawn after everything
+	// else, so draw it after the parent's `run` implementation. This means
+	// that any other injections into Game.draw, even after this plugin is
+	// imported, will still be called before the cursor is drawn.
+	run: function () {
+		this.parent();
 		this.cursor && this.cursor.draw(ig.input.mouse.x, ig.input.mouse.y);
 	}
 });
